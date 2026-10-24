@@ -13,16 +13,16 @@ You sign in once with your own Google account. No service accounts, no JSON keys
 - A Google Cloud project with Vertex AI enabled
 - To read credits: permission to view the project's billing account (usually `billing.viewer`)
 
-Linux, macOS and Windows are supported. On Windows the plugin's own files live under
-`%APPDATA%` and `%LOCALAPPDATA%` instead of `~/.config` and `~/.cache`, and gcloud is
+Linux has been tried with real accounts. Support for macOS and Windows is
+implemented, but has not been tried with a real account on either platform.
+On Windows the plugin's own files live under `%APPDATA%` and `%LOCALAPPDATA%`
+instead of `~/.config` and `~/.cache`, and gcloud is
 started through `cmd.exe`, which is the only way Windows runs a `.cmd`.
 
 ## What this was run on
 
 Sign-in, model listing and a real inference request were run on **Linux** against
-**two real Google accounts** with Magpie 0.1.1336 and 0.1.1343, with gcloud's own ADC
-and with an ADC the plugin wrote. `bun test` runs the same suite on Linux and macOS
-(the browser tests need Chrome installed and skip themselves without it).
+**two real Google accounts**, with gcloud's own ADC and with an ADC the plugin wrote.
 
 The Windows path — `cmd.exe` for `gcloud.cmd`, `%APPDATA%`/`%LOCALAPPDATA%` for the
 plugin's own files — is implemented and covered by the unit tests' path handling, but
@@ -32,7 +32,7 @@ that is why; macOS has likewise not been tried with a real account.
 ## Install and sign in
 
 ```bash
-magpie plugin add @magpie-community/opencode-gcp-ai-auth
+magpie plugin add @magpie-community/gcp-ai
 ```
 
 Then click sign in on the **GCP AI** row, or run:
@@ -90,6 +90,8 @@ Google has no API for promotional credits, so the balance is read from the Cloud
 | `VERTEX_CREDITS_FAILURE_TTL` | `1200` seconds |
 | `VERTEX_CREDITS_TRANSIENT_TTL` | `60` seconds, for network failures |
 | `VERTEX_MODELS_CACHE_TTL` | `21600` seconds (6 hours) |
+
+A machine-wide `CLOUDSDK_CONFIG` is never read. It would point every account at one ADC, and a sign-in there would overwrite credentials the plugin didn't write; the plugin only uses its own `<config>/gcp-ai/adc-<account>` directories.
 
 ## Privacy
 
